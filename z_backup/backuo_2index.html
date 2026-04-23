@@ -3382,13 +3382,13 @@ function ts(h){h.classList.toggle('open');h.querySelector('.arr').classList.togg
 // ══════════════════════════════════════════════════════
 const DEFAULT_PROJECT={
   "version":2,
-  "sliders":{"domeR":"28.8","domeZ":"-6.6","domeCY":"5.5","domeCX":"0","domeTilt":"-34","domeArc":"50","projX":"0","projY":"0","projZ":"-6","texRX":"0","texRY":"0","texRZ":"0","rows":"12","seatsPerRow":"24","seatSpX":"1.5","rowDepth":"1.5","firstRowGap":"2","seatStartZ":"-4.7","arcAngle":"0","arcCZ":"12","chairRot":"-180","riserH":"1.03","baseH":"0","seatW":"0.64","seatD":"0.42","backH":"0.6","recline":"0","legH":"0.36","roomW":"40","roomH":"10.5","ambI":"0","sunI":"1.1","sunX":"8","sunY":"20","sunZ":"-5","fillI":"0.2","ptI":"2.3","fov":"120","near":"0.05","far":"700","orbSens":"1","flySpd":"8","flySens":"0.15","wireOp":"0.25","fog":"0","uiFs":"11"},
+  "sliders":{"domeR":"28.8","domeZ":"-6.6","domeCY":"5.5","domeCX":"0","domeTilt":"-34","domeArc":"50","projX":"0","projY":"0","projZ":"-6","texRX":"0","texRY":"0","texRZ":"0","rows":"12","seatsPerRow":"24","seatSpX":"1.5","rowDepth":"1.5","firstRowGap":"2","seatStartZ":"-4.7","arcAngle":"0","arcCZ":"12","chairRot":"-180","riserH":"1.03","baseH":"0","seatW":"0.64","seatD":"0.42","backH":"0.6","recline":"0","legH":"0.36","roomW":"40","roomH":"10.5","ambI":"0","sunI":"1.1","sunX":"8","sunY":"20","sunZ":"-5","fillI":"0.2","ptI":"2.3","fov":"91","near":"0.05","far":"700","orbSens":"1","flySpd":"8","flySens":"0.15","wireOp":"0.25","fog":"0","uiFs":"11"},
   "checks":{"showDome":true,"showProj":false,"seatsBack":true,"wireOn":true,"mergeCeil":false,"showMerge":true,"texFlip":true,"showGrid":false,"showStars":false,"invertAD":false,"invertY":false},
   "colors":{"c-dome":"#0d1230","c-floor":"#0e0c08","c-plat":"#131008","c-cush":"#ff2600","c-back":"#ff2600","c-arm":"#1a1208","c-wall":"#0a0a14","c-proj":"#1a1a3a","c-wire":"#3838a0","c-vpbg":"#0a0a1e","c-amb":"#1a1a3a","c-sun":"#8090ff","c-pt":"#ffffff","c-uitx":"#dcdcf0","c-acc":"#1e9090","c-pnl":"#20204e"},
   "wallSt":{"back":{"vis":false,"off":0},"front":{"vis":false,"off":0},"left":{"vis":false,"off":0},"right":{"vis":false,"off":0},"ceil":{"vis":false,"off":0}},
   "camPresets":[{"name":"ISO","pos":[-2.685112109829087,21.42401847554441,35.228039662427086],"tgt":[-3.3485463801543385,18.63086971818497,3.8620933796708896]},{"name":"Front","pos":[0,6,30],"tgt":[0,4,6]},{"name":"Side","pos":[30,8,4],"tgt":[0,4,4]},{"name":"Top","pos":[0,40,4],"tgt":[0,0,4]},{"name":"Back","pos":[0,6,-22],"tgt":[0,4,4]},{"name":"Dome","pos":[0,5,-5],"tgt":[0,5,12]},{"name":"Seat","pos":[0,2,-10],"tgt":[0,2,10]}],
   "bookmarks":[],
-  "camera":{"pos":[-0.8,15.7,19.8],"tgt":[0,4,4],"sph":[16.74,1.199,3.189]}
+  "camera":{"pos":[-40.87007723763917,10.147669399586572,10.25148085231061],"tgt":[0,4,4],"sph":[41.799976857697075,1.423187371157933,-1.419012925549652]}
 };
 
 // ══════════════════════════════════════════════════════
@@ -3473,10 +3473,10 @@ function initMobileUI(){
       padding-bottom:calc(3px + env(safe-area-inset-bottom));
     }
     .mob-btn{
-      padding:2px 6px;font-size:20px;line-height:1;
+      padding:4px 10px;font-size:14px;line-height:1;
       background:transparent;color:var(--text);border:1px solid var(--dim);
       cursor:pointer;font-family:'Courier New',monospace;border-radius:2px;
-      flex-shrink:0;min-width:32px;text-align:center;
+      flex-shrink:0;min-width:36px;text-align:center;
     }
     .mob-btn.on{background:rgba(91,127,255,.2);border-color:var(--accent);color:var(--accent);}
     .mob-divider{color:var(--border2);font-size:16px;padding:0 2px;opacity:.5;line-height:1;}
@@ -4183,29 +4183,7 @@ try {
   setGizmo('select');
   renderSavedThemes(); // populate custom themes in sidebar on load
   applyProjectData(DEFAULT_PROJECT);
-  applySoftIrixTheme();
-
-  // Default camera position and FOV
-  camera.position.set(-0.8, 15.7, 19.8);
-  orbitTgt.set(0, 4, 4);
-  const _initOff = new THREE.Vector3().subVectors(camera.position, orbitTgt);
-  sph.setFromVector3(_initOff);
-  camera.fov = 120;
-  camera.updateProjectionMatrix();
-  document.getElementById('fov').value = 120;
-  sV('v-fov', '120°');
-
-  // Load default dome test pattern from root folder
-  (function loadDefaultTex(){
-    new THREE.TextureLoader().load('2160.png', tx=>{
-      tx.flipY=false;
-      domeTex=tx;
-      MAT.domeTex.map=tx;
-      MAT.domeTex.needsUpdate=true;
-      document.getElementById('tex-st').textContent='✓ 2160.png';
-      rebuild();
-    }, undefined, ()=>{/* silently skip if not found */});
-  })();
+  applySoftIrixDarkTheme();
   // PWA defaults: Helvetica font, size 12
   (function applyPWADefaults(){
     const fontSel = document.getElementById('uiFont');
