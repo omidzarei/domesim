@@ -214,19 +214,8 @@ button.full{flex:none;width:100%;margin-top:4px;}
 .pe-name{font-size:var(--ui-fs);color:var(--text);flex:1;}
 .num3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:3px;}
 .num3 input{width:100%;padding:2px 3px;text-align:center;font-size:var(--ui-fs);}
-/* Video timeline — fixed at very bottom, bleeds behind iPhone home indicator */
-#vid-bar{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  background:rgba(6,6,15,.95);
-  border-top:1px solid var(--border);
-  padding:5px 12px;
-  padding-bottom:calc(5px + env(safe-area-inset-bottom));
-  display:none;
-  align-items:center;
-  gap:8px;
-  z-index:50;
-}
+/* Video player */
+#vid-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(6,6,15,.92);border-top:1px solid var(--border);padding:6px 12px;display:none;align-items:center;gap:8px;z-index:10;}
 #vid-bar.show{display:flex;}
 #vid-play{min-width:auto;flex:0;padding:4px 8px;}
 #vid-time{font-size:var(--ui-fs);color:var(--muted);min-width:70px;text-align:center;}
@@ -275,7 +264,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
   <div id="coll-warn">⚠ Mesh overlap</div>
   <div id="toast">Saved</div>
   <div id="fly-hint">W/S:fwd/back · A/D:left/right · Q/E:up/down · Shift:fast · M:exit</div>
-  <!-- Video timeline — fixed at very bottom, behind home indicator -->
+  <!-- Video bar -->
   <div id="vid-bar">
     <button id="vid-play" onclick="vidPlayPause()">▶</button>
     <input type="range" id="vid-seek" min="0" max="100" step="0.1" value="0" oninput="vidSeek(this.value)">
@@ -446,9 +435,9 @@ button.full{flex:none;width:100%;margin-top:4px;}
   <!-- VISUAL -->
   <div class="tp" id="tp-vis">
     <div class="sec-h open" onclick="ts(this)"><span>Viewport</span><span class="arr">▶</span></div><div class="sec-b open">
-      <div class="tog-row"><label>Show grid</label><label class="tog"><input type="checkbox" id="showGrid" onchange="toggleGrid()"><span class="tog-t"></span></label></div>
+      <div class="tog-row"><label>Show grid</label><label class="tog"><input type="checkbox" id="showGrid" checked onchange="toggleGrid()"><span class="tog-t"></span></label></div>
       <div class="tog-row"><label>Show HUD &amp; gizmos (H)</label><label class="tog"><input type="checkbox" id="showHud" checked onchange="hudSetVisible(this.checked)"><span class="tog-t"></span></label></div>
-      <div class="tog-row"><label>Show stars</label><label class="tog"><input type="checkbox" id="showStars" onchange="toggleStars()"><span class="tog-t"></span></label></div>
+      <div class="tog-row"><label>Show stars</label><label class="tog"><input type="checkbox" id="showStars" checked onchange="toggleStars()"><span class="tog-t"></span></label></div>
       <div class="tog-row"><label>All wireframe (override)</label><label class="tog"><input type="checkbox" id="allWireframe" onchange="rebuild()"><span class="tog-t"></span></label></div>
       <div class="clr-row"><label>Background</label><input type="color" id="c-vpbg" value="#06060f" onchange="updBG()"></div>
       <div class="cr"><div class="cl"><span>Fog density</span><span class="vl" id="v-fog" onclick="editSlider(event,'fog')">0.012</span></div><input type="range" id="fog" min="0" max="0.08" step="0.001" value="0.012" oninput="updFog()"></div>
@@ -1089,7 +1078,6 @@ function loadVid(e){
     MAT.domeTex.map=vidTex;MAT.domeTex.needsUpdate=true;
     document.getElementById('vid-st').textContent='✓ '+f.name;
     document.getElementById('vid-bar').classList.add('show');
-    document.body.classList.add('vid-active');
     rebuild();
   });
   vidEl.addEventListener('timeupdate',updateVidBar);
@@ -1101,7 +1089,6 @@ function clearVid(){
   MAT.domeTex.map=null;MAT.domeTex.needsUpdate=true;
   document.getElementById('vid-st').textContent='No video';
   document.getElementById('vid-bar').classList.remove('show');
-  document.body.classList.remove('vid-active');
   document.getElementById('dome-vid-in').value='';
   rebuild();
 }
@@ -3383,7 +3370,7 @@ function ts(h){h.classList.toggle('open');h.querySelector('.arr').classList.togg
 const DEFAULT_PROJECT={
   "version":2,
   "sliders":{"domeR":"28.8","domeZ":"-6.6","domeCY":"5.5","domeCX":"0","domeTilt":"-34","domeArc":"50","projX":"0","projY":"0","projZ":"-6","texRX":"0","texRY":"0","texRZ":"0","rows":"12","seatsPerRow":"24","seatSpX":"1.5","rowDepth":"1.5","firstRowGap":"2","seatStartZ":"-4.7","arcAngle":"0","arcCZ":"12","chairRot":"-180","riserH":"1.03","baseH":"0","seatW":"0.64","seatD":"0.42","backH":"0.6","recline":"0","legH":"0.36","roomW":"40","roomH":"10.5","ambI":"0","sunI":"1.1","sunX":"8","sunY":"20","sunZ":"-5","fillI":"0.2","ptI":"2.3","fov":"91","near":"0.05","far":"700","orbSens":"1","flySpd":"8","flySens":"0.15","wireOp":"0.25","fog":"0","uiFs":"11"},
-  "checks":{"showDome":true,"showProj":false,"seatsBack":true,"wireOn":true,"mergeCeil":false,"showMerge":true,"texFlip":true,"showGrid":false,"showStars":false,"invertAD":false,"invertY":false},
+  "checks":{"showDome":true,"showProj":false,"seatsBack":true,"wireOn":true,"mergeCeil":false,"showMerge":true,"texFlip":true,"showGrid":true,"invertAD":false,"invertY":false},
   "colors":{"c-dome":"#0d1230","c-floor":"#0e0c08","c-plat":"#131008","c-cush":"#ff2600","c-back":"#ff2600","c-arm":"#1a1208","c-wall":"#0a0a14","c-proj":"#1a1a3a","c-wire":"#3838a0","c-vpbg":"#0a0a1e","c-amb":"#1a1a3a","c-sun":"#8090ff","c-pt":"#ffffff","c-uitx":"#dcdcf0","c-acc":"#1e9090","c-pnl":"#20204e"},
   "wallSt":{"back":{"vis":false,"off":0},"front":{"vis":false,"off":0},"left":{"vis":false,"off":0},"right":{"vis":false,"off":0},"ceil":{"vis":false,"off":0}},
   "camPresets":[{"name":"ISO","pos":[-2.685112109829087,21.42401847554441,35.228039662427086],"tgt":[-3.3485463801543385,18.63086971818497,3.8620933796708896]},{"name":"Front","pos":[0,6,30],"tgt":[0,4,6]},{"name":"Side","pos":[30,8,4],"tgt":[0,4,4]},{"name":"Top","pos":[0,40,4],"tgt":[0,0,4]},{"name":"Back","pos":[0,6,-22],"tgt":[0,4,4]},{"name":"Dome","pos":[0,5,-5],"tgt":[0,5,12]},{"name":"Seat","pos":[0,2,-10],"tgt":[0,2,10]}],
@@ -3464,22 +3451,20 @@ function initMobileUI(){
     #nav-hint{font-size:9px!important;padding:3px 8px!important;top:48px!important;}
     /* Gizmo bar smaller on mobile */
     #gizmo-bar{gap:3px!important;}
-    /* Mobile touch panel — compact single row */
+    /* Mobile touch panel */
     #mob-panel{
       display:flex;position:absolute;bottom:0;left:0;right:0;
       background:rgba(6,6,15,.92);border-top:1px solid var(--border);
-      padding:3px 4px;gap:2px;align-items:center;z-index:20;
-      justify-content:center;
-      padding-bottom:calc(3px + env(safe-area-inset-bottom));
+      padding:6px 8px;gap:6px;align-items:center;z-index:20;flex-wrap:wrap;
     }
     .mob-btn{
-      padding:4px 10px;font-size:14px;line-height:1;
+      padding:8px 12px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
       background:transparent;color:var(--text);border:1px solid var(--dim);
       cursor:pointer;font-family:'Courier New',monospace;border-radius:2px;
-      flex-shrink:0;min-width:36px;text-align:center;
+      flex-shrink:0;
     }
     .mob-btn.on{background:rgba(91,127,255,.2);border-color:var(--accent);color:var(--accent);}
-    .mob-divider{color:var(--border2);font-size:16px;padding:0 2px;opacity:.5;line-height:1;}
+    #mob-orbit-hint{font-size:9px;color:var(--muted);flex:1;text-align:center;line-height:1.5;}
   `;
   document.head.appendChild(ms);
 
@@ -3487,14 +3472,14 @@ function initMobileUI(){
   const vp=document.getElementById('viewport');
   const mob=document.createElement('div');mob.id='mob-panel';
   mob.innerHTML=`
-    <button class="mob-btn on" id="mb-orbit" ontouchstart="mbMode('orbit')" title="Orbit">⟳</button>
-    <button class="mob-btn" id="mb-pan" ontouchstart="mbMode('pan')" title="Pan">✥</button>
-    <button class="mob-btn" id="mb-zoom" ontouchstart="mbMode('zoom')" title="Zoom">⤡</button>
-    <span class="mob-divider">|</span>
-    <button class="mob-btn on" id="mb-sel" ontouchstart="mbGizmo('select')" title="Select">◈</button>
-    <button class="mob-btn" id="mb-mov" ontouchstart="mbGizmo('move')" title="Move">⊕</button>
-    <button class="mob-btn" id="mb-rot" ontouchstart="mbGizmo('rotate')" title="Rotate">↻</button>
-    <button class="mob-btn" id="mb-scl" ontouchstart="mbGizmo('scale')" title="Scale">⤢</button>
+    <button class="mob-btn on" id="mb-orbit" ontouchstart="mbMode('orbit')">Orbit</button>
+    <button class="mob-btn" id="mb-pan" ontouchstart="mbMode('pan')">Pan</button>
+    <button class="mob-btn" id="mb-zoom" ontouchstart="mbMode('zoom')">Zoom</button>
+    <button class="mob-btn" id="mb-sel" ontouchstart="mbGizmo('select')">Sel</button>
+    <button class="mob-btn" id="mb-mov" ontouchstart="mbGizmo('move')">Move</button>
+    <button class="mob-btn" id="mb-rot" ontouchstart="mbGizmo('rotate')">Rot</button>
+    <button class="mob-btn" id="mb-scl" ontouchstart="mbGizmo('scale')">Scl</button>
+    <span id="mob-orbit-hint">1-finger:orbit/pan/zoom · 2-finger:zoom · tap:select</span>
   `;
   vp.appendChild(mob);
 
@@ -3530,6 +3515,7 @@ function initMobileUI(){
     ['orbit','pan','zoom'].forEach(n=>{
       const b=document.getElementById('mb-'+n);if(b)b.className='mob-btn'+(n===m?' on':'');
     });
+    updateMobHint();
   }
   function mbGizmo(m){
     mobGizMode=m;setGizmo(m);
@@ -3540,6 +3526,13 @@ function initMobileUI(){
     const b=document.getElementById(map[m]);if(b)b.className='mob-btn on';
   }
   window.mbMode=mbMode;window.mbGizmo=mbGizmo;
+
+  function updateMobHint(){
+    const h=document.getElementById('mob-orbit-hint');if(!h)return;
+    const hints={orbit:'1-finger drag = orbit',pan:'1-finger drag = pan',zoom:'1-finger drag = zoom'};
+    h.textContent=(hints[mobNavMode]||'')+' · 2-finger = zoom';
+  }
+  updateMobHint();
 
   // ── Touch → 3D navigation ─────────────────────────
   canvas.addEventListener('touchstart',e=>{
@@ -4183,7 +4176,7 @@ try {
   setGizmo('select');
   renderSavedThemes(); // populate custom themes in sidebar on load
   applyProjectData(DEFAULT_PROJECT);
-  applySoftIrixDarkTheme();
+  applySgiIrixTheme();
   // PWA defaults: Helvetica font, size 12
   (function applyPWADefaults(){
     const fontSel = document.getElementById('uiFont');
@@ -4275,14 +4268,30 @@ self.addEventListener('fetch', e => {
       box-sizing: border-box !important;
     }
 
-    /* ── BOTTOM GIZMO BAR: hide on mobile — mob-panel handles nav+gizmo ── */
+    /* ── BOTTOM GIZMO BAR: one thin row right above the sidebar ── */
     #gizmo-bar {
-      display: none !important;
+      top: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      width: 100% !important;
+      display: flex !important;
+      gap: 2px !important;
+      padding: 3px 4px !important;
+      background: rgba(6,6,15,.85) !important;
+      border-top: 1px solid var(--border, #222) !important;
+      justify-content: space-between !important;
+      z-index: 25 !important;
+      box-sizing: border-box !important;
     }
-
-    /* Mob-panel sits above vid-bar when timeline is active */
-    body.vid-active #mob-panel {
-      bottom: calc(36px + env(safe-area-inset-bottom)) !important;
+    #gizmo-bar .gz {
+      flex: 1 1 0 !important;
+      padding: 4px 2px !important;
+      font-size: 9px !important;
+      letter-spacing: .04em !important;
+      text-align: center !important;
+      border-radius: 2px !important;
     }
 
     /* Hide verbose nav-hint on mobile (no keyboard) */
@@ -4301,10 +4310,8 @@ self.addEventListener('fetch', e => {
       -webkit-overflow-scrolling: touch;
     }
 
-    /* When video timeline is active, sidebar needs bottom padding */
-    body.vid-active #sidebar {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 36px) !important;
-    }
+    /* Collapsible sidebar handle */
+    #pwa-handle {
       display: flex;
       align-items: center;
       justify-content: center;
