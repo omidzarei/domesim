@@ -4220,46 +4220,85 @@ self.addEventListener('fetch', e => {
 }
 </script>
 
-<!-- ══ iPhone PWA portrait: scroll-lock, safe-areas, collapsible bottom panel ══ -->
+<!-- ══ iPhone PWA portrait: edge-to-edge, thin top/bottom UI bars, collapsible sidebar ══ -->
 <style id="pwa-portrait-style">
-  /* White-bar hack — prevents gap at bottom of screen on iOS standalone */
-  html { min-height: calc(100% + env(safe-area-inset-top)); background: #06060f; }
-
-  /* Lock the whole page from scrolling/bouncing; only inner panes scroll */
+  /* True edge-to-edge on iOS standalone — fill behind status bar AND home indicator */
   html, body {
+    background: #06060f !important;
+    margin: 0 !important;
+    padding: 0 !important;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: auto;
   }
+  html { height: 100%; }
   body {
-    /* Block any global panning gestures from scrolling the page */
     touch-action: none;
-    background: #06060f;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
-  /* Safe-area padding on the 3D viewport (status bar / notch) */
   @media (max-width: 900px) {
+    body { height: 100dvh !important; width: 100vw !important; overflow: hidden !important; }
+
+    /* Viewport: NO padding — canvas goes truly edge-to-edge behind status bar.
+       The HUD bar below sits inside the safe-area instead. */
     #viewport {
-      padding-top: env(safe-area-inset-top);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      padding: 0 !important;
       box-sizing: border-box;
     }
-    /* The HUD / gizmo bar should sit below the notch */
-    #hud-bar { top: calc(10px + env(safe-area-inset-top)) !important; }
-    #gizmo-bar { top: calc(10px + env(safe-area-inset-top)) !important; }
-    #nav-hint  { top: calc(52px + env(safe-area-inset-top)) !important; }
 
-    /* Mobile bottom toolbar must clear the home indicator */
-    #mob-panel {
-      padding-bottom: calc(6px + env(safe-area-inset-bottom)) !important;
+    /* ── TOP HUD: one thin line, full width, sits BEHIND the iPhone status bar ── */
+    #hud-bar {
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      transform: none !important;
+      padding: calc(env(safe-area-inset-top) + 2px) 8px 3px 8px !important;
+      background: rgba(6,6,15,.78) !important;
+      border: none !important;
+      border-bottom: 1px solid var(--border, #222) !important;
+      border-radius: 0 !important;
+      font-size: 9px !important;
+      line-height: 1.1 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      z-index: 30 !important;
+      box-sizing: border-box !important;
     }
-  }
 
-  /* The bottom sidebar (tabs + controls) on mobile */
-  @media (max-width: 900px) {
-    body { height: 100dvh !important; }
+    /* ── BOTTOM GIZMO BAR: one thin row right above the sidebar ── */
+    #gizmo-bar {
+      top: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      width: 100% !important;
+      display: flex !important;
+      gap: 2px !important;
+      padding: 3px 4px !important;
+      background: rgba(6,6,15,.85) !important;
+      border-top: 1px solid var(--border, #222) !important;
+      justify-content: space-between !important;
+      z-index: 25 !important;
+      box-sizing: border-box !important;
+    }
+    #gizmo-bar .gz {
+      flex: 1 1 0 !important;
+      padding: 4px 2px !important;
+      font-size: 9px !important;
+      letter-spacing: .04em !important;
+      text-align: center !important;
+      border-radius: 2px !important;
+    }
 
-    /* Internal scroll regions: allow vertical scroll, contain bounce */
+    /* Hide verbose nav-hint on mobile (no keyboard) */
+    #nav-hint, #fly-hint { display: none !important; }
+    #toast { bottom: 44px !important; }
+
+    /* Internal scroll regions */
     #tabs {
       touch-action: pan-x;
       overscroll-behavior: contain;
@@ -4271,13 +4310,13 @@ self.addEventListener('fetch', e => {
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Collapsible sidebar: a thin grab handle the user taps to expand/collapse */
+    /* Collapsible sidebar handle */
     #pwa-handle {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      height: 28px;
+      height: 26px;
       flex-shrink: 0;
       background: var(--tab-bg, #2a2a2a);
       border-top: 1px solid var(--border, #111);
@@ -4296,7 +4335,6 @@ self.addEventListener('fetch', e => {
     }
     #pwa-handle .lbl { opacity: .8; }
 
-    /* Default mobile state: sidebar EXPANDED to ~46dvh */
     #sidebar {
       max-height: 46dvh !important;
       min-height: 46dvh !important;
@@ -4304,10 +4342,9 @@ self.addEventListener('fetch', e => {
       transition: max-height .25s ease, min-height .25s ease;
     }
 
-    /* Collapsed state — only the handle is visible, viewport gets full height */
     body.sidebar-collapsed #sidebar {
-      max-height: calc(28px + env(safe-area-inset-bottom)) !important;
-      min-height: calc(28px + env(safe-area-inset-bottom)) !important;
+      max-height: calc(26px + env(safe-area-inset-bottom)) !important;
+      min-height: calc(26px + env(safe-area-inset-bottom)) !important;
     }
     body.sidebar-collapsed #sbar-titlebar,
     body.sidebar-collapsed #tabs,
@@ -4318,11 +4355,6 @@ self.addEventListener('fetch', e => {
     }
     body.sidebar-collapsed #pwa-handle .lbl::after { content: ' — tap to expand'; }
     body:not(.sidebar-collapsed) #pwa-handle .lbl::after { content: ' — tap to collapse'; }
-  }
-
-  /* In standalone PWA portrait, START collapsed for max viewport */
-  @media (display-mode: standalone) and (orientation: portrait) and (max-width: 900px) {
-    body.pwa-portrait-default { /* applied by JS on first load */ }
   }
 </style>
 <script>
