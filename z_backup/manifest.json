@@ -1,0 +1,47 @@
+{
+  "name": "Dome Sim | 3D",
+  "short_name": "Dome Sim",
+  "description": "Professional 3D Planetarium Designer — IRIX Interactive Environment",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#c0bdb8",
+  "theme_color": "#c0bdb8",
+  "categories": ["productivity", "design"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "splash-2796x1290.png",
+      "sizes": "2796x1290",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dome Sim | 3D — IRIX Interactive Environment"
+    },
+    {
+      "src": "splash-1290x2796.png",
+      "sizes": "1290x2796",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dome Sim | 3D — IRIX Interactive Environment"
+    }
+  ]
+}
