@@ -367,31 +367,31 @@ button.full{flex:none;width:100%;margin-top:4px;}
   bottom:0;left:0;right:0;
   background:var(--btn-face,#b0ada8);
   border-top:2px solid var(--btn-hi,#e8e5e0);
-  padding:3px 10px;
-  padding-bottom:calc(3px + env(safe-area-inset-bottom));
+  padding:4px 10px;
+  padding-bottom:calc(4px + env(safe-area-inset-bottom));
   display:none;
   align-items:center;
   gap:6px;
   z-index:50;
-  box-sizing:border-box;
 }
 #vid-bar.show{display:flex;}
 #vid-play{
-  min-width:auto;flex:0;padding:2px 9px;
-  font-family:'Courier New',monospace;font-weight:bold;font-size:10px;
+  min-width:auto;flex:0;padding:3px 10px;
+  font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-weight:bold;font-size:11px;
   background:var(--btn-face,#b0ada8);color:var(--btn-text,#111);
   border-top:1px solid var(--btn-hi,#e8e5e0);border-left:1px solid var(--btn-hi,#e8e5e0);
   border-right:1px solid var(--btn-sh,#6a6764);border-bottom:1px solid var(--btn-sh,#6a6764);
 }
 #vid-time{
   font-size:var(--ui-fs);font-family:'Courier New',monospace;
+  color:var(--btn-text,#111);min-width:70px;text-align:center;
   background:var(--btn-sh,#6a6764);padding:2px 5px;
   border-top:1px solid var(--btn-sh,#6a6764);border-left:1px solid var(--btn-sh,#6a6764);
   border-right:1px solid var(--btn-hi,#e8e5e0);border-bottom:1px solid var(--btn-hi,#e8e5e0);
-  color:var(--accent,#aacc00);min-width:72px;text-align:center;white-space:nowrap;
+  color:var(--accent,#aacc00);
 }
 #vid-seek{flex:1;cursor:pointer;}
-#vid-vol{width:52px;}
+#vid-vol{width:60px;}
 #dome-tex-in,#dome-vid-in,#proj-in{display:none;}
 
 /* ── SOFTIMAGE|3D STYLE INTRO ─────────────────────── */
@@ -1238,22 +1238,10 @@ function updFog(){scene.fog.density=fv('fog');sV('v-fog',fv('fog').toFixed(3));}
 let vidEl=null,vidTex=null;
 function loadVid(e){
   const f=e.target.files[0];if(!f)return;
-  if(vidEl){vidEl.pause();vidEl.src='';vidEl.load();}
+  if(vidEl){vidEl.pause();vidEl.src='';}
   vidEl=document.createElement('video');
-  // Prevent browser from intercepting as native player
-  vidEl.setAttribute('playsinline','');
-  vidEl.setAttribute('webkit-playsinline','');
-  vidEl.setAttribute('x-webkit-airplay','deny');
-  vidEl.disablePictureInPicture=true;
-  vidEl.controls=false;
-  vidEl.crossOrigin='anonymous';
-  vidEl.loop=false;
-  vidEl.muted=false;
-  vidEl.preload='auto';
-  // Must append to DOM (hidden) for iOS to decode frames into WebGL
-  vidEl.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:-9999px;left:-9999px;';
-  document.body.appendChild(vidEl);
   vidEl.src=URL.createObjectURL(f);
+  vidEl.crossOrigin='anonymous';vidEl.loop=false;vidEl.muted=false;
   vidEl.load();
   vidEl.addEventListener('loadedmetadata',()=>{
     vidTex=new THREE.VideoTexture(vidEl);
@@ -1265,15 +1253,10 @@ function loadVid(e){
     rebuild();
   });
   vidEl.addEventListener('timeupdate',updateVidBar);
-  vidEl.addEventListener('ended',()=>{document.getElementById('vid-play').textContent='|>';});
+  vidEl.addEventListener('ended',()=>{document.getElementById('vid-play').textContent='▶';});
 }
 function clearVid(){
-  if(vidEl){
-    vidEl.pause();
-    vidEl.src='';
-    vidEl.load();
-    if(vidEl.parentNode) vidEl.parentNode.removeChild(vidEl);
-  }
+  if(vidEl){vidEl.pause();vidEl.src='';}
   vidEl=null;vidTex=null;
   MAT.domeTex.map=null;MAT.domeTex.needsUpdate=true;
   document.getElementById('vid-st').textContent='No video';
@@ -1284,17 +1267,8 @@ function clearVid(){
 }
 function vidPlayPause(){
   if(!vidEl)return;
-  if(vidEl.paused){
-    vidEl.play().then(()=>{
-      document.getElementById('vid-play').textContent='||';
-    }).catch(err=>{
-      // iOS requires user gesture — already satisfied since this is onclick
-      console.warn('Video play failed:',err);
-    });
-  } else {
-    vidEl.pause();
-    document.getElementById('vid-play').textContent='|>';
-  }
+  if(vidEl.paused){vidEl.play();document.getElementById('vid-play').textContent='⏸';}
+  else{vidEl.pause();document.getElementById('vid-play').textContent='▶';}
 }
 function vidSeek(v){if(vidEl&&vidEl.duration)vidEl.currentTime=v/100*vidEl.duration;}
 function vidVol(v){if(vidEl)vidEl.volume=v;}
@@ -3599,7 +3573,7 @@ const DEFAULT_PROJECT={
   "wallSt":{"back":{"vis":false,"off":0},"front":{"vis":false,"off":0},"left":{"vis":false,"off":0},"right":{"vis":false,"off":0},"ceil":{"vis":false,"off":0}},
   "camPresets":[{"name":"ISO","pos":[-2.685112109829087,21.42401847554441,35.228039662427086],"tgt":[-3.3485463801543385,18.63086971818497,3.8620933796708896]},{"name":"Front","pos":[0,6,30],"tgt":[0,4,6]},{"name":"Side","pos":[30,8,4],"tgt":[0,4,4]},{"name":"Top","pos":[0,40,4],"tgt":[0,0,4]},{"name":"Back","pos":[0,6,-22],"tgt":[0,4,4]},{"name":"Dome","pos":[0,5,-5],"tgt":[0,5,12]},{"name":"Seat","pos":[0,2,-10],"tgt":[0,2,10]}],
   "bookmarks":[],
-  "camera":{"pos":[0,14,18.5],"tgt":[0.11,8.46,4.00],"sph":[14.72,1.232,3.176]}
+  "camera":{"pos":[-0.8,15.7,19.8],"tgt":[0,4,4],"sph":[16.74,1.199,3.189]}
 };
 
 // ══════════════════════════════════════════════════════
@@ -3675,69 +3649,78 @@ function initMobileUI(){
     #nav-hint{font-size:9px!important;padding:3px 8px!important;top:48px!important;}
     /* Gizmo bar smaller on mobile */
     #gizmo-bar{gap:3px!important;}
-    /* ── SGI IRIX Mobile Toolbar — tight single row ── */
+    /* ── SGI IRIX Mobile Toolbar ── */
     #mob-panel{
       display:flex;
       position:absolute;bottom:0;left:0;right:0;
-      background:var(--btn-face,#b0ada8);
-      border-top:2px solid var(--btn-hi,#e8e5e0);
-      /* fill into home-indicator safe area */
+      background:#b0ada8;
+      border-top:2px solid #ffffff;
+      border-bottom:1px solid #6a6764;
       padding:3px 5px;
       padding-bottom:calc(3px + env(safe-area-inset-bottom));
       gap:3px;align-items:center;z-index:20;
       justify-content:center;
-      box-shadow:inset 0 1px 0 var(--btn-hi,#e8e5e0);
-      /* No extra height — fits buttons only */
-      box-sizing:border-box;
+      box-shadow:inset 0 1px 0 #e8e5e0;
     }
+    /* Collapse toggle tab */
     #mob-collapse-tab{
-      position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-      background:var(--btn-face,#b0ada8);
-      border:1px solid var(--btn-sh,#6a6764);border-bottom:none;
-      border-top:1px solid var(--btn-hi,#e8e5e0);
-      padding:1px 10px;font-size:8px;
-      color:var(--btn-text,#1a1a1a);
-      font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;
+      position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+      background:#b0ada8;
+      border:1px solid #6a6764;border-bottom:none;
+      border-top:1px solid #ffffff;
+      padding:1px 14px;font-size:9px;
+      color:#1a1a1a;font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;
       cursor:pointer;letter-spacing:.04em;
       border-radius:3px 3px 0 0;
+      box-shadow:1px -1px 0 #ffffff inset;
     }
+    /* IRIX raised bevel button */
     .mob-btn{
-      padding:3px 7px;font-size:9px;line-height:1.2;
+      padding:3px 8px;font-size:9px;line-height:1.3;
       font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;
-      font-weight:bold;letter-spacing:.05em;
-      background:var(--btn-face,#b0ada8);
-      color:var(--btn-text,#111111);
-      border-top:1px solid var(--btn-hi,#e8e5e0);
-      border-left:1px solid var(--btn-hi,#e8e5e0);
-      border-right:1px solid var(--btn-sh,#6a6764);
-      border-bottom:1px solid var(--btn-sh,#6a6764);
-      cursor:pointer;border-radius:0;flex-shrink:0;
-      min-width:32px;text-align:center;
-      user-select:none;text-transform:uppercase;
+      font-weight:bold;letter-spacing:.03em;
+      background:#b0ada8;
+      color:#111111;
+      border-top:1px solid #e8e5e0;
+      border-left:1px solid #e8e5e0;
+      border-right:1px solid #6a6764;
+      border-bottom:1px solid #6a6764;
+      cursor:pointer;
+      border-radius:0;
+      flex-shrink:0;min-width:38px;text-align:center;
+      user-select:none;
+      text-transform:uppercase;
     }
     .mob-btn:active{
-      background:var(--btn-on,#9a9794);
-      border-top:1px solid var(--btn-sh,#6a6764);
-      border-left:1px solid var(--btn-sh,#6a6764);
-      border-right:1px solid var(--btn-hi,#e8e5e0);
-      border-bottom:1px solid var(--btn-hi,#e8e5e0);
+      background:#9a9794;
+      border-top:1px solid #6a6764;
+      border-left:1px solid #6a6764;
+      border-right:1px solid #e8e5e0;
+      border-bottom:1px solid #e8e5e0;
     }
     .mob-btn.on{
-      background:var(--btn-on,#9a9794);color:var(--accent,#aacc00);
-      border-top:1px solid var(--btn-sh,#6a6764);
-      border-left:1px solid var(--btn-sh,#6a6764);
-      border-right:1px solid var(--btn-hi,#e8e5e0);
-      border-bottom:1px solid var(--btn-hi,#e8e5e0);
+      background:#4a7a00;
+      color:#ffffff;
+      border-top:1px solid #2a4a00;
+      border-left:1px solid #2a4a00;
+      border-right:1px solid #88cc00;
+      border-bottom:1px solid #88cc00;
     }
     .mob-divider{
-      width:1px;height:18px;
-      background:var(--btn-sh,#6a6764);
-      margin:0 2px;flex-shrink:0;
+      width:1px;height:24px;
+      background:linear-gradient(to bottom,#6a6764,#e8e5e0);
+      margin:0 3px;flex-shrink:0;
+    }
+    /* IRIX label beneath buttons */
+    .mob-label{
+      font-size:7px;font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;
+      color:#333;text-align:center;line-height:1;margin-top:1px;
+      letter-spacing:.03em;text-transform:uppercase;
     }
     .mob-btn-wrap{display:flex;flex-direction:column;align-items:center;gap:1px;}
-    .mob-label{font-size:7px;font-family:Helvetica,sans-serif;color:var(--btn-text,#333);text-align:center;line-height:1;letter-spacing:.03em;text-transform:uppercase;}
-    #mob-panel.collapsed{padding-top:0;padding-bottom:env(safe-area-inset-bottom);height:calc(4px + env(safe-area-inset-bottom));overflow:visible;}
-    #mob-panel.collapsed .mob-btn,
+    /* When toolbar is collapsed, only show the tab */
+    #mob-panel.collapsed{padding:0;border-top-width:1px;height:3px;overflow:visible;}
+    #mob-panel.collapsed .mob-btn-wrap,
     #mob-panel.collapsed .mob-divider{display:none;}
   `;
   document.head.appendChild(ms);
@@ -3746,15 +3729,36 @@ function initMobileUI(){
   const vp=document.getElementById('viewport');
   const mob=document.createElement('div');mob.id='mob-panel';
   mob.innerHTML=`
-    <div id="mob-collapse-tab" onclick="mobToggleCollapse()">&#9660;</div>
-    <button class="mob-btn on" id="mb-orbit" ontouchstart="mbMode('orbit')">ORB</button>
-    <button class="mob-btn" id="mb-pan" ontouchstart="mbMode('pan')">PAN</button>
-    <button class="mob-btn" id="mb-zoom" ontouchstart="mbMode('zoom')">ZOM</button>
+    <div id="mob-collapse-tab" onclick="mobToggleCollapse()">&#9660; TOOLS</div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn on" id="mb-orbit" ontouchstart="mbMode('orbit')">ORB</button>
+      <div class="mob-label">Orbit</div>
+    </div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn" id="mb-pan" ontouchstart="mbMode('pan')">PAN</button>
+      <div class="mob-label">Pan</div>
+    </div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn" id="mb-zoom" ontouchstart="mbMode('zoom')">ZOM</button>
+      <div class="mob-label">Zoom</div>
+    </div>
     <div class="mob-divider"></div>
-    <button class="mob-btn on" id="mb-sel" ontouchstart="mbGizmo('select')">SEL</button>
-    <button class="mob-btn" id="mb-mov" ontouchstart="mbGizmo('move')">MOV</button>
-    <button class="mob-btn" id="mb-rot" ontouchstart="mbGizmo('rotate')">ROT</button>
-    <button class="mob-btn" id="mb-scl" ontouchstart="mbGizmo('scale')">SCL</button>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn on" id="mb-sel" ontouchstart="mbGizmo('select')">SEL</button>
+      <div class="mob-label">Select</div>
+    </div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn" id="mb-mov" ontouchstart="mbGizmo('move')">MOV</button>
+      <div class="mob-label">Move</div>
+    </div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn" id="mb-rot" ontouchstart="mbGizmo('rotate')">ROT</button>
+      <div class="mob-label">Rotate</div>
+    </div>
+    <div class="mob-btn-wrap">
+      <button class="mob-btn" id="mb-scl" ontouchstart="mbGizmo('scale')">SCL</button>
+      <div class="mob-label">Scale</div>
+    </div>
   `;
   vp.appendChild(mob);
 
@@ -4457,8 +4461,8 @@ try {
   applySoftIrixTheme();
 
   // Default camera position and FOV
-  camera.position.set(0, 14, 18.5);
-  orbitTgt.set(0.11, 8.46, 4.00);
+  camera.position.set(-0.8, 15.7, 19.8);
+  orbitTgt.set(0, 4, 4);
   const _initOff = new THREE.Vector3().subVectors(camera.position, orbitTgt);
   sph.setFromVector3(_initOff);
   camera.fov = 120;
@@ -4514,7 +4518,7 @@ if ('serviceWorker' in navigator) {
 <style id="pwa-portrait-style">
   /* True edge-to-edge on iOS standalone — fill behind status bar AND home indicator */
   html, body {
-    background: #000 !important;
+    background: #06060f !important;
     margin: 0 !important;
     padding: 0 !important;
     overscroll-behavior: none;
@@ -4530,23 +4534,24 @@ if ('serviceWorker' in navigator) {
   @media (max-width: 900px) {
     body { height: 100dvh !important; width: 100vw !important; overflow: hidden !important; }
 
-    /* Viewport goes truly edge-to-edge — fills behind status bar island */
+    /* Viewport: NO padding — canvas goes truly edge-to-edge behind status bar.
+       The HUD bar below sits inside the safe-area instead. */
     #viewport {
       padding: 0 !important;
       box-sizing: border-box;
     }
 
-    /* ── TOP HUD: transparent — shows viewport behind it, text floats over ── */
+    /* ── TOP HUD: IRIX title bar full width ── */
     #hud-bar {
       top: 0 !important;
       left: 0 !important;
       right: 0 !important;
       width: 100% !important;
       transform: none !important;
-      /* push text below the Dynamic Island / notch */
       padding: calc(env(safe-area-inset-top) + 2px) 8px 3px 8px !important;
-      background: transparent !important;
+      background: var(--btn-on, #9a9794) !important;
       border: none !important;
+      border-bottom: 2px solid var(--btn-sh, #6a6764) !important;
       font-size: 9px !important;
       line-height: 1.1 !important;
       white-space: nowrap !important;
@@ -4557,27 +4562,21 @@ if ('serviceWorker' in navigator) {
       font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif !important;
       font-weight: bold !important;
       letter-spacing: .06em !important;
-      /* text shadow so it reads over the 3D scene */
-      text-shadow: 0 1px 3px rgba(0,0,0,.8), 0 0 8px rgba(0,0,0,.5) !important;
-      color: var(--btn-text, #111) !important;
-      pointer-events: none !important;
-    }
-    #hud-bar .hl {
-      color: var(--accent, #aacc00) !important;
-      text-shadow: 0 1px 3px rgba(0,0,0,.9) !important;
     }
 
-    /* ── BOTTOM GIZMO BAR: hidden — mob-panel handles it ── */
-    #gizmo-bar { display: none !important; }
+    /* ── BOTTOM GIZMO BAR: hide on mobile — mob-panel handles nav+gizmo ── */
+    #gizmo-bar {
+      display: none !important;
+    }
 
-    /* Mob-panel shifts up when timeline is visible */
+    /* Mob-panel sits above vid-bar when timeline is active */
     body.vid-active #mob-panel {
-      bottom: calc(30px + env(safe-area-inset-bottom)) !important;
+      bottom: calc(36px + env(safe-area-inset-bottom)) !important;
     }
 
-    /* Hide verbose hints */
+    /* Hide verbose nav-hint on mobile (no keyboard) */
     #nav-hint, #fly-hint { display: none !important; }
-    #toast { bottom: calc(44px + env(safe-area-inset-bottom)) !important; }
+    #toast { bottom: 44px !important; }
 
     /* Internal scroll regions */
     #tabs {
@@ -4591,7 +4590,7 @@ if ('serviceWorker' in navigator) {
       -webkit-overflow-scrolling: touch;
     }
 
-    /* When video timeline is active, sidebar scroll needs room */
+    /* When video timeline is active, sidebar needs bottom padding */
     body.vid-active #sidebar {
       padding-bottom: calc(env(safe-area-inset-bottom) + 36px) !important;
     }
@@ -4602,7 +4601,7 @@ if ('serviceWorker' in navigator) {
       align-items: center;
       justify-content: center;
       gap: 8px;
-      height: 24px;
+      height: 26px;
       flex-shrink: 0;
       background: var(--btn-on, #9a9794);
       border-top: 2px solid var(--btn-hi, #e8e5e0);
@@ -4618,24 +4617,23 @@ if ('serviceWorker' in navigator) {
       -webkit-tap-highlight-color: transparent;
     }
     #pwa-handle .grip {
-      width: 32px; height: 3px;
+      width: 36px; height: 4px;
       background: var(--btn-sh, #6a6764);
       border-top: 1px solid var(--btn-sh, #6a6764);
       border-bottom: 1px solid var(--btn-hi, #e8e5e0);
     }
     #pwa-handle .lbl { opacity: .85; }
 
-    /* Sidebar takes up lower portion; mob-panel is OUTSIDE sidebar at viewport bottom */
     #sidebar {
       max-height: 46dvh !important;
       min-height: 46dvh !important;
-      /* No bottom padding — mob-panel is separate, positioned absolute in #viewport */
+      padding-bottom: env(safe-area-inset-bottom) !important;
       transition: max-height .25s ease, min-height .25s ease;
     }
 
     body.sidebar-collapsed #sidebar {
-      max-height: 24px !important;
-      min-height: 24px !important;
+      max-height: calc(26px + env(safe-area-inset-bottom)) !important;
+      min-height: calc(26px + env(safe-area-inset-bottom)) !important;
     }
     body.sidebar-collapsed #sbar-titlebar,
     body.sidebar-collapsed #tabs,
@@ -4646,16 +4644,6 @@ if ('serviceWorker' in navigator) {
     }
     body.sidebar-collapsed #pwa-handle .lbl::after { content: ' — tap to expand'; }
     body:not(.sidebar-collapsed) #pwa-handle .lbl::after { content: ' — tap to collapse'; }
-
-    /* Mobile touch overrides for larger tap targets */
-    input[type=range] { height: 28px !important; }
-    input[type=range]::-webkit-slider-thumb { width: 22px !important; height: 28px !important; }
-    button { padding: 8px 6px !important; font-size: 10px !important; min-height: 34px !important; }
-    .gz { padding: 8px 10px !important; font-size: 10px !important; }
-    .sec-h { padding: 9px 10px !important; font-size: 10px !important; }
-    .cr { margin-bottom: 12px !important; }
-    .cl { font-size: 10px !important; }
-    .clr-row label, .tog-row label:first-child { font-size: 10px !important; }
   }
 </style>
 <script>
