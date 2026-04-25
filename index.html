@@ -870,7 +870,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
   var DURATION = 5500;
   var raf      = null;
 
-  // resize: handled by Three.js renderer
+  function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
