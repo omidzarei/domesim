@@ -437,10 +437,10 @@ button.full{flex:none;width:100%;margin-top:4px;}
   <div id="fly-hint">W/S:fwd/back · A/D:left/right · Q/E:up/down · Shift:fast · M:exit</div>
   <!-- Video timeline — fixed at very bottom, behind home indicator -->
   <div id="vid-bar">
-    <button id="vid-play" onclick="vidPlayPause()">|&gt;</button>
+    <button id="vid-play" onclick="vidPlayPause()">▶</button>
     <input type="range" id="vid-seek" min="0" max="100" step="0.1" value="0" oninput="vidSeek(this.value)">
     <span id="vid-time">0:00 / 0:00</span>
-    <span style="font-size:var(--ui-fs);color:var(--btn-text,#111);opacity:.7;font-family:Helvetica,sans-serif;font-weight:bold;">VOL</span>
+    <span style="font-size:var(--ui-fs);color:var(--muted);">Vol</span>
     <input type="range" id="vid-vol" min="0" max="1" step="0.01" value="1" oninput="vidVol(this.value)">
   </div>
 </div>
@@ -508,20 +508,20 @@ button.full{flex:none;width:100%;margin-top:4px;}
       <div class="cr"><div class="cl"><span>Rotate X</span><span class="vl" id="v-texRX" onclick="editSlider(event,'texRX')">0°</span></div><input type="range" id="texRX" min="-180" max="180" step="1" value="0"></div>
       <div class="cr"><div class="cl"><span>Rotate Y</span><span class="vl" id="v-texRY" onclick="editSlider(event,'texRY')">0°</span></div><input type="range" id="texRY" min="-180" max="180" step="1" value="0"></div>
       <div class="cr"><div class="cl"><span>Rotate Z</span><span class="vl" id="v-texRZ" onclick="editSlider(event,'texRZ')">0°</span></div><input type="range" id="texRZ" min="-180" max="180" step="1" value="0"></div>
-      <p style="font-size:var(--ui-fs);color:var(--muted,#666);margin-bottom:6px;">Still image (domemaster JPG/PNG):</p>
+      <p style="font-size:var(--ui-fs);color:var(--muted);margin-bottom:6px;">Still image (domemaster JPG/PNG):</p>
       <div class="btn-row">
         <button class="ok" onclick="document.getElementById('dome-tex-in').click()">Load Image</button>
         <button class="wr" onclick="clearTex()">Clear</button>
       </div>
       <input type="file" id="dome-tex-in" accept="image/*" onchange="loadTex(event)">
-      <p style="margin-top:5px;color:var(--muted,#666);" id="tex-st">No image</p>
-      <p style="font-size:var(--ui-fs);color:var(--muted,#666);margin:8px 0 5px;">Video (MP4 domemaster):</p>
+      <p style="margin-top:5px;color:var(--muted);" id="tex-st">No image</p>
+      <p style="font-size:var(--ui-fs);color:var(--muted);margin:8px 0 5px;">Video (MP4 domemaster):</p>
       <div class="btn-row">
         <button class="ok" onclick="document.getElementById('dome-vid-in').click()">Load MP4</button>
         <button class="wr" onclick="clearVid()">Clear</button>
       </div>
       <input type="file" id="dome-vid-in" accept="video/*" onchange="loadVid(event)">
-      <p style="margin-top:5px;color:var(--muted,#666);" id="vid-st">No video</p>
+      <p style="margin-top:5px;color:var(--muted);" id="vid-st">No video</p>
     </div>
   </div>
 
@@ -591,7 +591,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
       </div>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>Camera Presets</span><span class="arr">▶</span></div><div class="sec-b open">
-      <p style="color:var(--muted,#666);margin-bottom:7px;line-height:1.5;">Set=saves current view. Go=jumps to preset.</p>
+      <p style="color:var(--muted);margin-bottom:7px;line-height:1.5;">Set=saves current view. Go=jumps to preset.</p>
       <div id="preset-list"></div>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>Bookmarks</span><span class="arr">▶</span></div><div class="sec-b open">
@@ -612,7 +612,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
       <div class="tog-row"><label>All wireframe (override)</label><label class="tog"><input type="checkbox" id="allWireframe" onchange="rebuild()"><span class="tog-t"></span></label></div>
       <div class="clr-row"><label>Background</label><input type="color" id="c-vpbg" value="#06060f" onchange="updBG()"></div>
       <div class="cr"><div class="cl"><span>Fog density</span><span class="vl" id="v-fog" onclick="editSlider(event,'fog')">0.012</span></div><input type="range" id="fog" min="0" max="0.08" step="0.001" value="0.012" oninput="updFog()"></div>
-      <p style="color:var(--muted,#666);margin-bottom:5px;margin-top:4px;">Hide objects:</p>
+      <p style="color:var(--muted);margin-bottom:5px;margin-top:4px;">Hide objects:</p>
       <div class="tog-row"><label>Hide dome</label><label class="tog"><input type="checkbox" id="hideDomeObj" onchange="rebuild()"><span class="tog-t"></span></label></div>
       <div class="tog-row"><label>Hide seats &amp; rows</label><label class="tog"><input type="checkbox" id="hideSeats" onchange="rebuild()"><span class="tog-t"></span></label></div>
       <div class="tog-row"><label>Hide floor &amp; platforms</label><label class="tog"><input type="checkbox" id="hideFloor" onchange="rebuild()"><span class="tog-t"></span></label></div>
@@ -702,15 +702,15 @@ button.full{flex:none;width:100%;margin-top:4px;}
       <div class="clr-row"><label>Projector</label><input type="color" id="c-proj" value="#1a1a3a" onchange="updColors()"></div>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>UI Customizer</span><span class="arr">▶</span></div><div class="sec-b open">
-      <p style="color:var(--muted,#666);line-height:1.55;margin-bottom:7px;">Recolor, resize fonts, adjust layout, save custom themes.</p>
+      <p style="color:var(--muted);line-height:1.55;margin-bottom:7px;">Recolor, resize fonts, adjust layout, save custom themes.</p>
       <div class="btn-row" style="margin-bottom:6px;">
         <button onclick="uiCustomizerOpen()" class="ok" id="ui-cust-btn">⚙ Customize UI</button>
       </div>
-      <p style="color:var(--muted,#666);font-size:var(--ui-fs);margin-bottom:4px;">Saved custom themes:</p>
+      <p style="color:var(--muted);font-size:var(--ui-fs);margin-bottom:4px;">Saved custom themes:</p>
       <div id="saved-themes-main-row" style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px;">
-        <span style="color:var(--muted,#666);font-size:var(--ui-fs);">No custom themes yet.</span>
+        <span style="color:var(--muted);font-size:var(--ui-fs);">No custom themes yet.</span>
       </div>
-      <p id="ui-cust-theme-name" style="color:var(--muted,#666);font-size:var(--ui-fs);margin-top:4px;"></p>
+      <p id="ui-cust-theme-name" style="color:var(--muted);font-size:var(--ui-fs);margin-top:4px;"></p>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>Wireframe</span><span class="arr">▶</span></div><div class="sec-b open">
       <div class="tog-row"><label>Wireframe on shaded</label><label class="tog"><input type="checkbox" id="wireOn" onchange="rebuild()"><span class="tog-t"></span></label></div>
@@ -734,19 +734,19 @@ button.full{flex:none;width:100%;margin-top:4px;}
   <!-- PROJECT -->
   <div class="tp" id="tp-proj">
     <div class="sec-h open" onclick="ts(this)"><span>Save / Load</span><span class="arr">▶</span></div><div class="sec-b open">
-      <p style="color:var(--muted,#666);margin-bottom:8px;line-height:1.55;">Saves all settings, camera, presets, bookmarks to JSON.</p>
+      <p style="color:var(--muted);margin-bottom:8px;line-height:1.55;">Saves all settings, camera, presets, bookmarks to JSON.</p>
       <div class="btn-row"><button class="ok full" onclick="saveProject()">Save Project (Ctrl+S)</button></div>
       <div class="btn-row"><button class="full" onclick="document.getElementById('proj-in').click()">Load Project</button></div>
       <div class="btn-row" style="margin-top:8px;"><button class="full" onclick="document.getElementById('splash-in').click()">Load Custom Splash Image</button></div>
       <input type="file" id="splash-in" accept="image/*" onchange="loadCustomSplash(event)" style="display:none">
       <div class="tog-row" style="margin-top:4px;"><label>Use custom splash</label><label class="tog"><input type="checkbox" id="useCustomSplash"><span class="tog-t"></span></label></div>
-      <p id="splash-st" style="color:var(--muted,#666);font-size:var(--ui-fs);margin-top:4px;">No custom splash</p>
+      <p id="splash-st" style="color:var(--muted);font-size:var(--ui-fs);margin-top:4px;">No custom splash</p>
       <input type="file" id="proj-in" accept=".json" onchange="loadProject(event)" style="display:none">
-      <p id="proj-st" style="margin-top:6px;color:var(--muted,#666);line-height:1.5;"></p>
+      <p id="proj-st" style="margin-top:6px;color:var(--muted);line-height:1.5;"></p>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>Export OBJ</span><span class="arr">▶</span></div><div class="sec-b open">
       <div class="btn-row"><button class="ok full" onclick="exportOBJ()">Export OBJ + MTL</button></div>
-      <p id="exp-st" style="margin-top:6px;color:var(--muted,#666);"></p>
+      <p id="exp-st" style="margin-top:6px;color:var(--muted);"></p>
     </div>
   </div>
 
@@ -755,10 +755,10 @@ button.full{flex:none;width:100%;margin-top:4px;}
     <div class="sec-h open" onclick="ts(this)"><span>PS4 Controller</span><span class="arr">&#x25B6;</span></div><div class="sec-b open">
       <div id="pad-status" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:7px 10px;background:var(--btn-on,#9a9794);border-top:1px solid var(--btn-sh,#6a6764);border-left:1px solid var(--btn-sh,#6a6764);border-right:1px solid var(--btn-hi,#e8e5e0);border-bottom:1px solid var(--btn-hi,#e8e5e0);">
         <span id="pad-dot" style="width:8px;height:8px;border-radius:50%;background:var(--warn);flex-shrink:0;transition:background .3s;"></span>
-        <span id="pad-name" style="font-size:var(--ui-fs);color:var(--muted,#666);">No controller detected</span>
+        <span id="pad-name" style="font-size:var(--ui-fs);color:var(--muted);">No controller detected</span>
       </div>
-      <p style="color:var(--muted,#666);line-height:1.6;margin-bottom:10px;">Connect PS4 DualShock via Bluetooth, then press any button to activate.</p>
-      <div style="background:var(--btn-on,#9a9794);border-top:1px solid var(--btn-sh,#6a6764);border-left:1px solid var(--btn-sh,#6a6764);border-right:1px solid var(--btn-hi,#e8e5e0);border-bottom:1px solid var(--btn-hi,#e8e5e0);padding:8px 10px;margin-bottom:10px;font-size:var(--ui-fs);color:var(--muted,#666);line-height:2.0;">
+      <p style="color:var(--muted);line-height:1.6;margin-bottom:10px;">Connect PS4 DualShock via Bluetooth, then press any button to activate.</p>
+      <div style="background:var(--btn-on,#9a9794);border-top:1px solid var(--btn-sh,#6a6764);border-left:1px solid var(--btn-sh,#6a6764);border-right:1px solid var(--btn-hi,#e8e5e0);border-bottom:1px solid var(--btn-hi,#e8e5e0);padding:8px 10px;margin-bottom:10px;font-size:var(--ui-fs);color:var(--muted);line-height:2.0;">
         <b style="color:var(--accent);display:block;margin-bottom:3px;">Camera Movement</b>
         <span style="color:var(--text);">L-Stick</span> Move fwd/back/strafe<br>
         <span style="color:var(--text);">R-Stick</span> Look (yaw + pitch)<br>
@@ -781,7 +781,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
       <div class="tog-row"><label>Invert look Y</label><label class="tog"><input type="checkbox" id="padInvY"><span class="tog-t"></span></label></div>
       <div class="tog-row"><label>Invert look X</label><label class="tog"><input type="checkbox" id="padInvX"><span class="tog-t"></span></label></div>
       <div style="margin-top:8px;">
-        <p style="font-size:var(--ui-fs);color:var(--muted,#666);margin-bottom:5px;">Live axes:</p>
+        <p style="font-size:var(--ui-fs);color:var(--muted);margin-bottom:5px;">Live axes:</p>
         <canvas id="pad-vis" width="260" height="80" style="width:100%;height:80px;border-top:1px solid var(--btn-sh,#6a6764);border-left:1px solid var(--btn-sh,#6a6764);border-right:1px solid var(--btn-hi,#e8e5e0);border-bottom:1px solid var(--btn-hi,#e8e5e0);background:var(--btn-sh,#2a2a2a);display:block;"></canvas>
       </div>
     </div>
@@ -800,7 +800,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
         <div class="cl"><span>Scrub</span><span class="vl" id="cr-scrub-lbl">0%</span></div>
         <input type="range" id="cr-scrub" min="0" max="100" step="0.1" value="0" oninput="camScrub(this.value);document.getElementById('cr-scrub-lbl').textContent=parseFloat(this.value).toFixed(0)+'%'">
       </div>
-      <p id="cr-status" style="font-size:var(--ui-fs);color:var(--muted,#666);margin-bottom:5px;">0 keyframes</p>
+      <p id="cr-status" style="font-size:var(--ui-fs);color:var(--muted);margin-bottom:5px;">0 keyframes</p>
       <div id="kf-list" style="max-height:160px;overflow-y:auto;margin-bottom:6px;"></div>
       <div class="btn-row">
         <button onclick="camExportKFs()" class="ok">JSON</button>
@@ -824,13 +824,13 @@ button.full{flex:none;width:100%;margin-top:4px;}
       <div class="cr"><div class="cl"><span>Timeline range (frames)</span></div>
         <div style="display:flex;gap:4px;margin-top:3px;align-items:center;">
           <input type="number" id="tlRangeStart" value="0" min="0" step="1" style="flex:1;padding:3px;text-align:center;font-size:var(--ui-fs);" placeholder="Start">
-          <span style="color:var(--muted,#666);">—</span>
+          <span style="color:var(--muted);">—</span>
           <input type="number" id="tlRangeEnd" value="9999" min="1" step="1" style="flex:1;padding:3px;text-align:center;font-size:var(--ui-fs);" placeholder="End">
         </div>
       </div>
     </div>
     <div class="sec-h open" onclick="ts(this)"><span>Video Export</span><span class="arr">▶</span></div><div class="sec-b open">
-      <p style="color:var(--muted,#666);line-height:1.55;margin-bottom:7px;">Records canvas while replaying camera path.</p>
+      <p style="color:var(--muted);line-height:1.55;margin-bottom:7px;">Records canvas while replaying camera path.</p>
       <div class="cr"><div class="cl"><span>Export FPS</span><span class="vl" id="v-expFPS">24</span></div><input type="range" id="expFPS" min="12" max="60" step="1" value="24" oninput="sV('v-expFPS',Math.round(fv('expFPS')))"></div>
       <div class="cr"><div class="cl"><span>Quality</span><span class="vl" id="v-expQuality">0.85</span></div><input type="range" id="expQuality" min="0.1" max="1" step="0.05" value="0.85" oninput="sV('v-expQuality',fv('expQuality').toFixed(2))"></div>
       <div class="cr"><div class="cl"><span>Format</span></div>
@@ -842,7 +842,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
         </select>
       </div>
       <div class="btn-row"><button id="exp-vid-btn" class="ok" onclick="exportVideoStart()">Export Video</button></div>
-      <p style="color:var(--muted,#666);margin-top:5px;font-size:var(--ui-fs);">MP4 requires Safari. WebM for Chrome/Firefox.</p>
+      <p style="color:var(--muted);margin-top:5px;font-size:var(--ui-fs);">MP4 requires Safari. WebM for Chrome/Firefox.</p>
     </div>
   </div>
 
@@ -870,7 +870,7 @@ button.full{flex:none;width:100%;margin-top:4px;}
   var DURATION = 5500;
   var raf      = null;
 
-  // resize: handled by Three.js renderer
+  function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
@@ -1726,14 +1726,14 @@ function buildPresetUI(){
         <button onclick="gotoPreset(${i})" style="min-width:auto;padding:2px 6px;">Go</button>
         <button onclick="savePreset(${i})" style="min-width:auto;padding:2px 6px;" class="ok">Set</button>
       </div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;font-size:var(--ui-fs);color:var(--muted,#666);text-align:center;margin-bottom:2px;"><span>X</span><span>Y</span><span>Z</span></div>
-      <div style="font-size:var(--ui-fs);color:var(--muted,#666);margin-bottom:2px;">Position</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;font-size:var(--ui-fs);color:var(--muted);text-align:center;margin-bottom:2px;"><span>X</span><span>Y</span><span>Z</span></div>
+      <div style="font-size:var(--ui-fs);color:var(--muted);margin-bottom:2px;">Position</div>
       <div class="num3">
         <input type="number" id="pp${i}x" value="${pr.pos[0].toFixed(2)}" step="0.1" onchange="updPreset(${i})">
         <input type="number" id="pp${i}y" value="${pr.pos[1].toFixed(2)}" step="0.1" onchange="updPreset(${i})">
         <input type="number" id="pp${i}z" value="${pr.pos[2].toFixed(2)}" step="0.1" onchange="updPreset(${i})">
       </div>
-      <div style="font-size:var(--ui-fs);color:var(--muted,#666);margin-bottom:2px;">Target</div>
+      <div style="font-size:var(--ui-fs);color:var(--muted);margin-bottom:2px;">Target</div>
       <div class="num3">
         <input type="number" id="pt${i}x" value="${pr.tgt[0].toFixed(2)}" step="0.1" onchange="updPreset(${i})">
         <input type="number" id="pt${i}y" value="${pr.tgt[1].toFixed(2)}" step="0.1" onchange="updPreset(${i})">
@@ -2686,7 +2686,7 @@ function uiCustomizerOpen(){
   function row(label,ctrl){
     const d=document.createElement('div');
     d.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;';
-    d.innerHTML=`<span style="color:var(--muted,#666);font-size:9px;flex:1;">${label}</span>`;
+    d.innerHTML=`<span style="color:var(--muted);font-size:9px;flex:1;">${label}</span>`;
     d.appendChild(ctrl);return d;
   }
   function mkColor(val,onChange){
@@ -2937,19 +2937,19 @@ function renderSavedThemes(){
     savedThemes.forEach((t,i)=>{
       const row=document.createElement('div');
       row.style.cssText='display:flex;align-items:center;gap:3px;width:100%;margin-bottom:3px;';
-      row.innerHTML=`<span style="flex:1;font-size:9px;color:var(--muted,#666);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${t.name}">${t.name}</span>
+      row.innerHTML=`<span style="flex:1;font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${t.name}">${t.name}</span>
         <button onclick="uiCustLoad(${i})" style="flex:0;padding:2px 6px;font-size:8px;" class="ok">Load</button>
         <button onclick="uiCustDelete(${i})" style="flex:0;padding:2px 5px;font-size:8px;" class="wr">✕</button>`;
       el.appendChild(row);
     });
-    if(savedThemes.length===0) el.innerHTML='<span style="color:var(--muted,#666);font-size:9px;">No saved themes yet.</span>';
+    if(savedThemes.length===0) el.innerHTML='<span style="color:var(--muted);font-size:9px;">No saved themes yet.</span>';
   }
   // Also inject saved theme buttons into the main sidebar theme section
   const mainRow=document.getElementById('saved-themes-main-row');
   if(mainRow){
     mainRow.innerHTML='';
     if(savedThemes.length===0){
-      mainRow.innerHTML='<span style="color:var(--muted,#666);font-size:var(--ui-fs);">No custom themes yet — use ⚙ Customize UI to save one.</span>';
+      mainRow.innerHTML='<span style="color:var(--muted);font-size:var(--ui-fs);">No custom themes yet — use ⚙ Customize UI to save one.</span>';
     } else {
       savedThemes.forEach((t,i)=>{
         const b=document.createElement('button');
@@ -3652,17 +3652,15 @@ function initMobileUI(){
       border-left:none!important;border-top:1px solid var(--border)!important;
       flex-direction:column!important;resize:vertical!important;overflow:hidden!important;
     }
-    /* Ctrl scroll gets extra bottom pad so last item clears the mob-panel */
-    #ctrl-scroll{padding-bottom:calc(32px + env(safe-area-inset-bottom))!important;}
     #sb-resize{width:100%!important;height:6px!important;top:auto!important;bottom:auto!important;left:0!important;right:0!important;cursor:ns-resize!important;position:relative!important;}
     #tabs{overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;}
     .tab{min-width:60px!important;flex-shrink:0!important;padding:8px 6px!important;font-size:10px!important;}
     #ctrl-scroll{-webkit-overflow-scrolling:touch;}
-    /* Larger touch targets for sidebar controls — NOT mob-panel buttons */
+    /* Larger touch targets for IRIX sliders */
     input[type=range]{height:32px!important;cursor:pointer;}
     input[type=range]::-webkit-slider-thumb{width:24px!important;height:32px!important;}
     input[type=range]::-webkit-slider-runnable-track{height:5px!important;}
-    #sidebar button:not(.mob-btn){padding:10px 8px!important;font-size:10px!important;min-height:38px!important;}
+    button{padding:10px 8px!important;font-size:10px!important;min-height:38px!important;}
     .gz{padding:10px 12px!important;font-size:10px!important;}
     .sec-h{padding:10px 10px!important;font-size:10px!important;}
     .cr{margin-bottom:14px!important;}
@@ -4134,7 +4132,7 @@ function renderKFList(){
   const list = document.getElementById('kf-list');
   if(!list) return;
   if(camKeyframes.length === 0){
-    list.innerHTML = '<div style="color:var(--muted,#666);font-size:var(--ui-fs);padding:4px 0;">No keyframes. Record or add manually.</div>';
+    list.innerHTML = '<div style="color:var(--muted);font-size:var(--ui-fs);padding:4px 0;">No keyframes. Record or add manually.</div>';
     return;
   }
   list.innerHTML = '';
@@ -4145,7 +4143,7 @@ function renderKFList(){
     row.innerHTML=`
       <span style="font-size:8px;color:var(--accent);min-width:14px;">${i+1}</span>
       <input type="number" value="${(kf.t/1000).toFixed(2)}" step="0.1" min="0" style="width:50px;font-size:8px;padding:1px 3px;" onchange="camSetKFTime(${i},parseFloat(this.value)*1000)" title="Time (s)">
-      <span style="font-size:8px;color:var(--muted,#666);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">&nbsp;${kf.pos.map(v=>v.toFixed(0)).join(',')}</span>
+      <span style="font-size:8px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">&nbsp;${kf.pos.map(v=>v.toFixed(0)).join(',')}</span>
       <button onclick="camGoKF(${i})" style="min-width:auto;flex:0;padding:2px 4px;font-size:8px;">Go</button>
       <button onclick="camMoveKF(${i},-1)" style="min-width:auto;flex:0;padding:1px 3px;font-size:8px;">↑</button>
       <button onclick="camMoveKF(${i},1)" style="min-width:auto;flex:0;padding:1px 3px;font-size:8px;">↓</button>
@@ -4434,7 +4432,16 @@ function drawPadVis(axes, btns) {
 // ══════════════════════════════════════════════════════
 // HUD VISIBILITY — H key shortcut, ✕ button, HUD pill
 // ══════════════════════════════════════════════════════
-// hudSetVisible: defined above
+function hudSetVisible(v){
+  var bar=document.getElementById('hud-bar');
+  var gz=document.getElementById('gizmo-bar');
+  var hint=document.getElementById('nav-hint');
+  var showBtn=document.getElementById('hud-show-btn');
+  if(bar)bar.style.display=v?'flex':'none';
+  if(gz)gz.style.display=v?'flex':'none';
+  if(hint)hint.style.display=v?'block':'none';
+  if(showBtn)showBtn.style.display=v?'none':'block';
+}
 
 // ══════════════════════════════════════════════════════
 // INIT
@@ -4618,10 +4625,11 @@ if ('serviceWorker' in navigator) {
     }
     #pwa-handle .lbl { opacity: .85; }
 
-    /* Sidebar takes up lower portion; mob-panel is in #viewport above */
+    /* Sidebar takes up lower portion; mob-panel is OUTSIDE sidebar at viewport bottom */
     #sidebar {
       max-height: 46dvh !important;
-      min-height: 38dvh !important;
+      min-height: 46dvh !important;
+      /* No bottom padding — mob-panel is separate, positioned absolute in #viewport */
       transition: max-height .25s ease, min-height .25s ease;
     }
 
@@ -4638,6 +4646,16 @@ if ('serviceWorker' in navigator) {
     }
     body.sidebar-collapsed #pwa-handle .lbl::after { content: ' — tap to expand'; }
     body:not(.sidebar-collapsed) #pwa-handle .lbl::after { content: ' — tap to collapse'; }
+
+    /* Mobile touch overrides for larger tap targets */
+    input[type=range] { height: 28px !important; }
+    input[type=range]::-webkit-slider-thumb { width: 22px !important; height: 28px !important; }
+    button { padding: 8px 6px !important; font-size: 10px !important; min-height: 34px !important; }
+    .gz { padding: 8px 10px !important; font-size: 10px !important; }
+    .sec-h { padding: 9px 10px !important; font-size: 10px !important; }
+    .cr { margin-bottom: 12px !important; }
+    .cl { font-size: 10px !important; }
+    .clr-row label, .tog-row label:first-child { font-size: 10px !important; }
   }
 </style>
 <script>
