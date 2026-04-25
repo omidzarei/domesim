@@ -1,73 +1,88 @@
-// Dome Sim | 3D — Service Worker
-// Caches the full app for offline use on iPhone PWA
+// ── DomeSim Service Worker ──────────────────────────────────────────────────
+// BUMP THIS STRING on every deploy → forces all clients to get the new version
+const VERSION = '2026-04-25-001';
+const CACHE   = `domesim-${VERSION}`;
 
-const CACHE_NAME = 'domesim-v1';
-const ASSETS = [
+// Assets to pre-cache on install (adjust paths to match your repo)
+const PRECACHE = [
   './',
   './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  './apple-touch-icon.png',
-  // Three.js CDN — cache on first load
-  'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'
+  './2160.png',
 ];
 
-// Install: pre-cache core assets
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      // Cache local assets immediately
-      const localAssets = ASSETS.filter(a => !a.startsWith('http'));
-      return cache.addAll(localAssets).then(() => {
-        // Try to cache CDN assets (non-blocking)
-        const cdnAssets = ASSETS.filter(a => a.startsWith('http'));
-        return Promise.allSettled(cdnAssets.map(url => cache.add(url)));
-      });
-    })
+// ── Install: pre-cache core assets ──────────────────────────────────────────
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(PRECACHE.map(u => new Request(u, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())   // activate immediately, don't wait for old tabs to close
   );
-  self.skipWaiting();
 });
 
-// Activate: clean old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+// ── Activate: delete all old caches ─────────────────────────────────────────
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      ))
+      .then(() => self.clients.claim())  // take control of all open tabs immediately
   );
-  self.clients.claim();
 });
 
-// Fetch: cache-first for local, network-first for CDN
-self.addEventListener('fetch', event => {
-  const url = event.request.url;
-  
-  // CDN resources: try network, fall back to cache
-  if (url.includes('cdnjs.cloudflare.com') || url.includes('fonts.googleapis.com')) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          return response;
+// ── Fetch: network-first for HTML, cache-first for static assets ─────────────
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // Always go to network for HTML — so new deploys are picked up immediately
+  if (e.request.destination === 'document' || url.pathname.endsWith('.html')) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(e.request))  // offline fallback
     );
     return;
   }
 
-  // Local assets: cache-first
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
-        if (response && response.status === 200 && response.type === 'basic') {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      });
-    })
+  // CDN resources (Three.js etc) — network-first with cache fallback
+  if (url.hostname !== self.location.hostname) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // Everything else (images, fonts, etc) — cache-first, network fallback
+  e.respondWith(
+    caches.match(e.request)
+      .then(cached => {
+        if (cached) return cached;
+        return fetch(e.request).then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
+        });
+      })
   );
+});
+
+// ── Message: allow page to trigger skipWaiting manually ─────────────────────
+self.addEventListener('message', e => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
 });

@@ -4487,36 +4487,13 @@ try {
   })();
   updCam();
   animate();
-// ── PWA: Service Worker with instant update ──────────────────────────────────
+// ── PWA: Register Service Worker ─────────────────────
+// SW via blob URL is blocked in many browsers (SecurityError).
+// Only register if a real sw.js file exists at the root.
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(reg => {
-
-    // If a new SW is already waiting (page was loaded while update was pending)
-    if (reg.waiting) {
-      reg.waiting.postMessage('skipWaiting');
-    }
-
-    // When a new SW finishes installing and is waiting to activate
-    reg.addEventListener('updatefound', () => {
-      const newSW = reg.installing;
-      newSW.addEventListener('statechange', () => {
-        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-          // New version ready — skip waiting then reload
-          newSW.postMessage('skipWaiting');
-        }
-      });
-    });
-
-  }).catch(() => {/* sw.js not present — skip silently */});
-
-  // When the SW activates (after skipWaiting), reload the page to get fresh assets
-  let reloading = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!reloading) {
-      reloading = true;
-      window.location.reload();
-    }
-  });
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(() => {/* sw.js not present — skip silently */});
 }
 
 } catch(e) {
